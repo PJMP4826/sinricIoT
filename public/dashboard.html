@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <title>Control de Locker</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f0f0f0;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    .locker-image {
+      width: 50%; /* Ajusta el tamaño de la imagen al 95% del ancho de la pantalla */
+      height: auto;
+      cursor: pointer;
+      object-fit: cover; /* Asegura que la imagen ocupe toda el área disponible */
+      transition: opacity 0.3s ease;
+    }
+
+    .locker-image:hover {
+      opacity: 0.8;
+    }
+
+    /* Media Queries para pantallas pequeñas */
+    @media (max-width: 768px) {
+      .locker-image {
+        width: 100%; /* La imagen ocupará todo el ancho en pantallas pequeñas */
+        height: auto;
+      }
+    }
+  </style>
+  <script>
+    let lockerState = 'closed'; // Estado inicial del locker
+
+    async function controlDevice(action) {
+      try {
+        const response = await fetch(`/${action}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        // Cambiar la imagen según el estado
+        const lockerImage = document.getElementById('lockerImage');
+        if (action === 'turnOn') {
+          lockerImage.src = 'img/abierto.jpeg'; // Imagen del locker abierto
+          lockerState = 'open';
+        } else if (action === 'turnOff') {
+          lockerImage.src = 'img/cerrado.jpeg'; // Imagen del locker cerrado
+          lockerState = 'closed';
+        }
+      } catch (error) {
+        console.error('Error controlando el dispositivo', error);
+      }
+    }
+
+    function toggleLocker() {
+      if (lockerState === 'closed') {
+        controlDevice('turnOn');
+      } else {
+        controlDevice('turnOff');
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <div class="button-container">
+    <img id="lockerImage" src="img/cerrado.jpeg" alt="Locker" class="locker-image" onclick="toggleLocker()" />
+  </div>
+
+</body>
+</html>

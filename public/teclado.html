@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teclado Numérico</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/scripts.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Ingrese su Contraseña</h1>
+        <input type="text" class="display" id="passwordDisplay" readonly placeholder="Ingrese su contraseña">
+        
+        <div class="keypad">
+            <button onclick="addDigit('1')">1</button>
+            <button onclick="addDigit('2')">2</button>
+            <button onclick="addDigit('3')">3</button>
+            <button onclick="addDigit('4')">4</button>
+            <button onclick="addDigit('5')">5</button>
+            <button onclick="addDigit('6')">6</button>
+            <button onclick="addDigit('7')">7</button>
+            <button onclick="addDigit('8')">8</button>
+            <button onclick="addDigit('9')">9</button>
+            <button onclick="clearDisplay()">Clear</button>
+            <button onclick="addDigit('0')">0</button>
+            <button onclick="backspace()">←</button>
+        </div>
+
+        <button class="enter" onclick="submitPassword()">Ingresar</button>
+    </div>
+
+    <script>
+        let selectedUserId = localStorage.getItem('selectedUserId'); // Obtener el ID del usuario seleccionado desde localStorage
+
+        // Verificar si se seleccionó un usuario
+        if (!selectedUserId) {
+            alert('Por favor seleccione un usuario primero.');
+            window.location.href = 'index.html'; // Redirigir a la página de selección de usuario
+        }
+
+        // Añadir un dígito al display de la contraseña
+        function addDigit(digit) {
+            const display = document.getElementById('passwordDisplay');
+            display.value += digit;
+        }
+
+        // Limpiar el display
+        function clearDisplay() {
+            const display = document.getElementById('passwordDisplay');
+            display.value = '';
+        }
+
+        // Eliminar el último carácter del display (backspace)
+        function backspace() {
+            const display = document.getElementById('passwordDisplay');
+            display.value = display.value.slice(0, -1);
+        }
+
+        // Enviar la contraseña y el ID del usuario al servidor para su verificación
+        function submitPassword() {
+            const password = document.getElementById('passwordDisplay').value;
+
+            // Verificar si la contraseña está vacía
+            if (!password) {
+                alert('Por favor ingrese la contraseña');
+                return;
+            }
+
+            // Enviar la contraseña y el userId al servidor
+            fetch('/api/auth/verifyPassword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: selectedUserId, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Contraseña correcta');
+                    // Redirigir a la página de inicio o a otro recurso después de éxito
+                } else {
+                    alert('Contraseña incorrecta');
+                }
+            })
+            .catch(error => {
+                console.error('Error al verificar la contraseña:', error);
+                alert('Hubo un error al verificar la contraseña');
+            });
+        }
+    </script>
+</body>
+</html>

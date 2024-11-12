@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selecciona un Usuario</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/scripts.js" defer></script>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="./img/caja-fuerte.ico">
+</head>
+<body>
+    <div class="container">
+        <h1>Selecciona tu perfil</h1>
+        <div class="user-buttons">
+            <button class="user-button fausto" onclick="selectUser(1)"> </button>
+            <button class="user-button edna" onclick="selectUser(2)"> </button>
+        </div>
+    </div>
+
+    <script>
+        // Función para seleccionar el usuario y redirigir a la página de contraseña
+        function selectUser(userId) {
+            // Guardar el ID del usuario seleccionado en localStorage para usarlo en la página del teclado
+            localStorage.setItem('selectedUserId', userId);
+            // Redirigir a la página del teclado numérico
+            window.location.href = 'teclado.html'; // Asegúrate de que la ruta sea correcta
+        }
+    </script>
+</body>
+</html>
